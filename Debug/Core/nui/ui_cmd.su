@@ -1,0 +1,15 @@
+../Core/nui/ui_cmd.c:38:20:prv_skip_spaces	0	static
+../Core/nui/ui_cmd.c:45:13:prv_rstrip	8	static
+../Core/nui/ui_cmd.c:23:13:prv_send_ok	0	static
+../Core/nui/ui_cmd.c:28:13:prv_send_error	0	static
+../Core/nui/ui_cmd.c:80:13:prv_cmd_equals_relaxed	12	static
+../Core/nui/ui_cmd.c:63:12:prv_parse_u8_dec.constprop	20	static
+../Core/nui/ui_cmd.c:15:13:UI_Hook_OnConfigChanged	0	static
+../Core/nui/ui_cmd.c:129:13:prv_commit_config_changed	8	static
+../Core/nui/ui_cmd.c:141:13:prv_commit_sensor_mask.isra	8	static
+../Core/nui/ui_cmd.c:16:13:UI_Hook_OnTimeChanged	0	static
+../Core/nui/ui_cmd.c:17:13:UI_Hook_OnBeaconOnceRequested	0	static
+../Core/nui/ui_cmd.c:18:13:UI_Hook_OnBleEndRequested	0	static
+../Core/nui/ui_cmd.c:19:13:UI_Hook_OnTestStartRequested	0	static
+../Core/nui/ui_cmd.c:20:13:UI_Hook_OnSyncRequested	0	static
+../Core/nui/ui_cmd.c:189:6:UI_Cmd_ProcessLine	376	static

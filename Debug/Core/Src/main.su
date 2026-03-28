@@ -1,0 +1,11 @@
+../Drivers/STM32WLxx_HAL_Driver/Inc/stm32wlxx_ll_bus.h:449:22:LL_AHB2_GRP1_EnableClock	8	static
+../Core/Src/main.c:126:6:SystemClock_Config	112	static,ignoring_inline_asm
+../Core/Src/main.c:178:6:MX_ADC_Init	8	static,ignoring_inline_asm
+../Core/Src/main.c:225:6:MX_RTC_Init	64	static,ignoring_inline_asm
+../Core/Src/main.c:286:6:MX_SPI1_Init	8	static,ignoring_inline_asm
+../Core/Src/main.c:326:6:MX_SUBGHZ_Init	8	static,ignoring_inline_asm
+../Core/Src/main.c:352:6:MX_USART1_UART_Init	8	static,ignoring_inline_asm
+../Core/Src/main.c:400:6:MX_DMA_Init	16	static
+../Core/Src/main.c:419:6:MX_GPIO_Init	48	static
+../Core/Src/main.c:74:5:main	8	static
+../Core/Src/main.c:527:6:Error_Handler	0	static,ignoring_inline_asm

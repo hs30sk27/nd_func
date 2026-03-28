@@ -1,0 +1,15 @@
+../Core/nui/ui_cmd.c:38:20:prv_skip_spaces	3
+../Core/nui/ui_cmd.c:45:13:prv_rstrip	4
+../Core/nui/ui_cmd.c:23:13:prv_send_ok	1
+../Core/nui/ui_cmd.c:28:13:prv_send_error	1
+../Core/nui/ui_cmd.c:80:13:prv_cmd_equals_relaxed	10
+../Core/nui/ui_cmd.c:63:12:prv_parse_u8_dec.constprop	6
+../Core/nui/ui_cmd.c:15:13:UI_Hook_OnConfigChanged	1
+../Core/nui/ui_cmd.c:129:13:prv_commit_config_changed	2
+../Core/nui/ui_cmd.c:141:13:prv_commit_sensor_mask.isra	1
+../Core/nui/ui_cmd.c:16:13:UI_Hook_OnTimeChanged	1
+../Core/nui/ui_cmd.c:17:13:UI_Hook_OnBeaconOnceRequested	1
+../Core/nui/ui_cmd.c:18:13:UI_Hook_OnBleEndRequested	1
+../Core/nui/ui_cmd.c:19:13:UI_Hook_OnTestStartRequested	1
+../Core/nui/ui_cmd.c:20:13:UI_Hook_OnSyncRequested	1
+../Core/nui/ui_cmd.c:189:6:UI_Cmd_ProcessLine	37

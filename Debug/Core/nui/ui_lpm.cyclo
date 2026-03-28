@@ -1,0 +1,11 @@
+../Drivers/STM32WLxx_HAL_Driver/Inc/stm32wlxx_ll_bus.h:449:22:LL_AHB2_GRP1_EnableClock	1
+../Core/nui/ui_lpm.c:70:13:prv_set_gpio_analog	2
+../Core/nui/ui_lpm.c:100:13:prv_restore_gpio_output	2
+../Core/nui/ui_lpm.c:433:6:UI_LPM_Init	1
+../Core/nui/ui_lpm.c:439:6:UI_LPM_LockStop	1
+../Core/nui/ui_lpm.c:445:6:UI_LPM_UnlockStop	3
+../Core/nui/ui_lpm.c:458:6:UI_LPM_IsStopLocked	1
+../Core/nui/ui_lpm.c:463:6:UI_UART1_TxDma_DeInit	1
+../Core/nui/ui_lpm.c:475:6:UI_LPM_BeforeStop_DeInitPeripherals	17
+../Core/nui/ui_lpm.c:511:6:UI_LPM_AfterStop_ReInitPeripherals	3
+../Core/nui/ui_lpm.c:522:6:UI_LPM_EnterStopNow	2
