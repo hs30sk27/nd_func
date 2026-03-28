@@ -62,10 +62,10 @@
 ../Core/nui/nd_app.c:2351:6:ND_App_OnBleSessionStart	16	static
 ../Core/nui/nd_app.c:2225:6:UI_Hook_OnOpKeyPressed	272	static
 ../Core/nui/nd_app.c:2388:6:ND_App_OnBleSessionEnd	8	static
-../Core/nui/nd_app.c:2432:6:ND_App_Process	184	static
-../Core/nui/nd_app.c:2750:6:ND_App_Init	24	static
-../Core/nui/nd_app.c:2804:6:ND_Radio_OnTxDone	16	static
-../Core/nui/nd_app.c:2831:6:ND_Radio_OnTxTimeout	16	static
-../Core/nui/nd_app.c:2864:6:ND_Radio_OnRxDone	64	static
-../Core/nui/nd_app.c:2949:6:ND_Radio_OnRxTimeout	16	static
-../Core/nui/nd_app.c:2979:6:ND_Radio_OnRxError	16	static
+../Core/nui/nd_app.c:2772:6:ND_App_Process	184	static
+../Core/nui/nd_app.c:2791:6:ND_App_Init	24	static
+../Core/nui/nd_app.c:2845:6:ND_Radio_OnTxDone	16	static
+../Core/nui/nd_app.c:2872:6:ND_Radio_OnTxTimeout	16	static
+../Core/nui/nd_app.c:2905:6:ND_Radio_OnRxDone	64	static
+../Core/nui/nd_app.c:2990:6:ND_Radio_OnRxTimeout	16	static
+../Core/nui/nd_app.c:3020:6:ND_Radio_OnRxError	16	static

@@ -1,5 +1,10 @@
 ../Core/nui/ui_core.c:48:13:prv_cmdrx_reset	0	static
-../Core/nui/ui_core.c:156:13:UI_TaskMain	24	static
+../Core/nui/ui_core.c:157:13:prv_ui_idle	0	static
+../Core/nui/ui_core.c:225:13:UI_TaskMain	16	static
+../Core/nui/ui_core.c:214:13:prv_ui_role_func	0	static
+../Core/nui/ui_core.c:209:13:prv_ui_ble_func	0	static
+../Core/nui/ui_core.c:181:13:prv_ui_key_func	8	static
+../Core/nui/ui_core.c:161:13:prv_ui_uart_func	24	static
 ../Core/nui/ui_core.c:20:13:UI_Hook_OnOpKeyPressed	0	static
-../Core/nui/ui_core.c:213:6:UI_Core_ClearFlagsBeforeStop	0	static
-../Core/nui/ui_core.c:219:6:UI_Init	8	static
+../Core/nui/ui_core.c:238:6:UI_Core_ClearFlagsBeforeStop	0	static
+../Core/nui/ui_core.c:244:6:UI_Init	8	static

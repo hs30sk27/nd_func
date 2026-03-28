@@ -2429,62 +2429,72 @@ void ND_App_OnBleSessionEnd(void)
     prv_request_stop_mode_if_possible();
 }
 
-void ND_App_Process(void)
+static void prv_nd_led_func(uint32_t* ev)
 {
-    if (!s_inited) {
+    if (ev == NULL) {
         return;
     }
 
-    UI_BLE_Process();
-
-    uint32_t ev = s_evt_flags;
-
-    if ((ev & ND_EVT_RADIO_TX_DONE_LED_PULSE) != 0u) {
+    if (((*ev) & ND_EVT_RADIO_TX_DONE_LED_PULSE) != 0u) {
         s_evt_flags &= ~ND_EVT_RADIO_TX_DONE_LED_PULSE;
         prv_led1_blocking_pulse_ms(ND_RADIO_LED_PULSE_MS);
-        ev = s_evt_flags;
+        *ev = s_evt_flags;
     }
 
-    if ((ev & ND_EVT_RADIO_RX_DONE_LED_PULSE) != 0u) {
+    if (((*ev) & ND_EVT_RADIO_RX_DONE_LED_PULSE) != 0u) {
         s_evt_flags &= ~ND_EVT_RADIO_RX_DONE_LED_PULSE;
         prv_led1_blocking_pulse_ms(ND_RADIO_LED_PULSE_MS);
-        ev = s_evt_flags;
+        *ev = s_evt_flags;
+    }
+}
+
+static void prv_nd_sync_notify_func(uint32_t* ev)
+{
+    if (ev == NULL) {
+        return;
     }
 
-    if ((ev & ND_EVT_SYNC_NOTIFY_MASK) != 0u) {
-        if ((ev & ND_EVT_SYNC_TX_NOTIFY) != 0u) {
+    if (((*ev) & ND_EVT_SYNC_NOTIFY_MASK) != 0u) {
+        if (((*ev) & ND_EVT_SYNC_TX_NOTIFY) != 0u) {
             s_evt_flags &= ~ND_EVT_SYNC_TX_NOTIFY;
             prv_send_sync_status(ND_SYNC_NOTIFY_TX_STR);
         }
-        if ((ev & ND_EVT_SYNC_DONE_NOTIFY) != 0u) {
+        if (((*ev) & ND_EVT_SYNC_DONE_NOTIFY) != 0u) {
             s_evt_flags &= ~ND_EVT_SYNC_DONE_NOTIFY;
             prv_send_sync_status(ND_SYNC_NOTIFY_DONE_STR);
             prv_restore_ble_timeout_after_sync_success();
             prv_resume_runtime_after_sync_completion();
         }
-        if ((ev & ND_EVT_SYNC_TIMEOUT_NOTIFY) != 0u) {
+        if (((*ev) & ND_EVT_SYNC_TIMEOUT_NOTIFY) != 0u) {
             s_evt_flags &= ~ND_EVT_SYNC_TIMEOUT_NOTIFY;
             prv_send_sync_status(ND_SYNC_NOTIFY_TIMEOUT_STR);
             prv_clear_saved_ble_timeout_for_sync();
             prv_resume_runtime_after_sync_completion();
         }
-        if ((ev & ND_EVT_SYNC_TX_FAIL_NOTIFY) != 0u) {
+        if (((*ev) & ND_EVT_SYNC_TX_FAIL_NOTIFY) != 0u) {
             s_evt_flags &= ~ND_EVT_SYNC_TX_FAIL_NOTIFY;
             prv_send_sync_status(ND_SYNC_NOTIFY_TX_FAIL_STR);
             prv_clear_saved_ble_timeout_for_sync();
             prv_resume_runtime_after_sync_completion();
         }
-        ev = s_evt_flags;
+        *ev = s_evt_flags;
+    }
+}
+
+static bool prv_nd_control_func(uint32_t* ev)
+{
+    if (ev == NULL) {
+        return false;
     }
 
-    if ((ev & ND_EVT_TEST_SESSION_EXPIRE) != 0u) {
+    if (((*ev) & ND_EVT_TEST_SESSION_EXPIRE) != 0u) {
         s_evt_flags &= ~ND_EVT_TEST_SESSION_EXPIRE;
         prv_stop_test_session();
         prv_reschedule_main_if_pending();
-        return;
+        return true;
     }
 
-    if ((ev & ND_EVT_BOOT_LISTEN_START) != 0u) {
+    if (((*ev) & ND_EVT_BOOT_LISTEN_START) != 0u) {
         s_evt_flags &= ~ND_EVT_BOOT_LISTEN_START;
         if (!s_boot_listen_active) {
             prv_begin_boot_listen();
@@ -2492,12 +2502,13 @@ void ND_App_Process(void)
             prv_continue_boot_listen_or_schedule();
         }
         prv_reschedule_main_if_pending();
-        return;
+        return true;
     }
 
-    if ((ev & ND_EVT_BEACON_LISTEN_START) != 0u) {
-        s_evt_flags &= ~ND_EVT_BEACON_LISTEN_START;
+    if (((*ev) & ND_EVT_BEACON_LISTEN_START) != 0u) {
         bool started = false;
+
+        s_evt_flags &= ~ND_EVT_BEACON_LISTEN_START;
         if (!UI_Time_IsValid()) {
             started = prv_start_beacon_rx(ND_SEARCH_RX_WINDOW_MS, ND_RX_REASON_SEARCH);
         } else if (s_sync_state == ND_SYNC_PHASE_WALK) {
@@ -2515,16 +2526,16 @@ void ND_App_Process(void)
             prv_schedule_short_beacon_retry();
         }
         prv_reschedule_main_if_pending();
-        return;
+        return true;
     }
 
-    if ((ev & ND_EVT_REMINDER_LISTEN_START) != 0u) {
+    if (((*ev) & ND_EVT_REMINDER_LISTEN_START) != 0u) {
         s_evt_flags &= ~ND_EVT_REMINDER_LISTEN_START;
         prv_reschedule_main_if_pending();
-        return;
+        return true;
     }
 
-    if ((ev & ND_EVT_SYNC_START) != 0u) {
+    if (((*ev) & ND_EVT_SYNC_START) != 0u) {
         s_evt_flags &= ~ND_EVT_SYNC_START;
         if (!prv_start_sync_request_tx()) {
             prv_send_sync_status(ND_SYNC_NOTIFY_TX_FAIL_STR);
@@ -2532,36 +2543,46 @@ void ND_App_Process(void)
             prv_resume_runtime_after_sync_completion();
         }
         prv_reschedule_main_if_pending();
-        return;
+        return true;
     }
 
-    if ((ev & ND_EVT_ENTER_STOP) != 0u) {
+    if (((*ev) & ND_EVT_ENTER_STOP) != 0u) {
         s_evt_flags &= ~ND_EVT_ENTER_STOP;
         prv_enter_stop_now_if_possible();
         prv_reschedule_main_if_pending();
-        return;
+        return true;
     }
 
-    if ((ev & ND_EVT_TX_RECOVER) != 0u) {
+    if (((*ev) & ND_EVT_TX_RECOVER) != 0u) {
         s_evt_flags &= ~ND_EVT_TX_RECOVER;
         if (s_state == ND_STATE_TX_DATA) {
             prv_force_tx_recovery(false);
         }
         prv_reschedule_main_if_pending();
-        return;
+        return true;
     }
 
-    if ((ev & ND_EVT_SENSOR_START) != 0u) {
-        s_evt_flags &= ~ND_EVT_SENSOR_START;
+    return false;
+}
+
+static bool prv_nd_work_func(uint32_t* ev)
+{
+    if (ev == NULL) {
+        return false;
+    }
+
+    if (((*ev) & ND_EVT_SENSOR_START) != 0u) {
         uint32_t now_sec;
         uint32_t period;
         uint32_t sensor_off;
         uint32_t sensor_slot_id;
 
+        s_evt_flags &= ~ND_EVT_SENSOR_START;
+
         if (!s_runtime_enabled) {
             s_sensor_ready = false;
             prv_reschedule_main_if_pending();
-            return;
+            return true;
         }
 
         now_sec = UI_Time_NowSec2016();
@@ -2574,7 +2595,7 @@ void ND_App_Process(void)
         sensor_slot_id = prv_periodic_slot_id_from_epoch_sec(now_sec, period, sensor_off);
         if (sensor_slot_id == s_last_sensor_slot_id) {
             prv_reschedule_main_if_pending();
-            return;
+            return true;
         }
         s_last_sensor_slot_id = sensor_slot_id;
         {
@@ -2601,11 +2622,10 @@ void ND_App_Process(void)
             }
         }
         prv_reschedule_main_if_pending();
-        return;
+        return true;
     }
 
-    if ((ev & ND_EVT_TX_START) != 0u) {
-        s_evt_flags &= ~ND_EVT_TX_START;
+    if (((*ev) & ND_EVT_TX_START) != 0u) {
         const UI_Config_t *cfg;
         UI_NodeData_t nd;
         ND_SensorResult_t tx_sensor;
@@ -2622,6 +2642,7 @@ void ND_App_Process(void)
         uint8_t cfg_mask;
         uint8_t tx_payload_len = 0u;
 
+        s_evt_flags &= ~ND_EVT_TX_START;
         cfg = UI_GetConfig();
         cfg_mask = (uint8_t)(cfg->sensor_en_mask & UI_SENSOR_EN_ALL);
         now_centi = UI_Time_NowCenti2016();
@@ -2631,7 +2652,7 @@ void ND_App_Process(void)
 
         if (!s_runtime_enabled) {
             prv_reschedule_main_if_pending();
-            return;
+            return true;
         }
 
         if (s_last_sensor_valid) {
@@ -2652,7 +2673,7 @@ void ND_App_Process(void)
         if (!prv_is_event_due_now(now_centi, period, tx_off, ND_TX_DUE_LATE_GRACE_CENTI, &due_tx_centi)) {
             prv_schedule_tx_event_at(prv_next_event_centi(now_centi, period, tx_off), cfg->node_num);
             prv_reschedule_main_if_pending();
-            return;
+            return true;
         }
 
         now_sec = (uint32_t)(due_tx_centi / 100u);
@@ -2668,7 +2689,7 @@ void ND_App_Process(void)
                 prv_schedule_sensor_and_tx();
             }
             prv_reschedule_main_if_pending();
-            return;
+            return true;
         }
 
         payload_ready = prv_build_verified_node_payload(cfg,
@@ -2702,7 +2723,7 @@ void ND_App_Process(void)
                 prv_schedule_sensor_and_tx();
             }
             prv_reschedule_main_if_pending();
-            return;
+            return true;
         }
 
         if (!prv_radio_ready_for_tx()) {
@@ -2715,7 +2736,7 @@ void ND_App_Process(void)
                 prv_schedule_sensor_and_tx();
             }
             prv_reschedule_main_if_pending();
-            return;
+            return true;
         }
         if ((tx_payload_len == 0u) || !UI_Radio_PrepareTx(tx_payload_len)) {
             UI_Radio_MarkRecoverNeeded();
@@ -2727,7 +2748,7 @@ void ND_App_Process(void)
                 prv_schedule_sensor_and_tx();
             }
             prv_reschedule_main_if_pending();
-            return;
+            return true;
         }
 
         freq_anchor_sec = prv_get_data_freq_anchor_sec(now_sec);
@@ -2741,10 +2762,30 @@ void ND_App_Process(void)
         s_node_tx_payload_len = tx_payload_len;
         Radio.Send(s_node_tx_payload, s_node_tx_payload_len);
         prv_reschedule_main_if_pending();
-        return;
+        return true;
     }
 
     prv_request_stop_mode_if_possible();
+    return false;
+}
+
+void ND_App_Process(void)
+{
+    uint32_t ev;
+
+    if (!s_inited) {
+        return;
+    }
+
+    ev = s_evt_flags;
+    prv_nd_led_func(&ev);
+    prv_nd_sync_notify_func(&ev);
+
+    if (prv_nd_control_func(&ev)) {
+        return;
+    }
+
+    (void)prv_nd_work_func(&ev);
 }
 
 void ND_App_Init(void)
